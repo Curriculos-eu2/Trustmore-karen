@@ -21,6 +21,7 @@
     --gold-600: #d99a2b;
     --gold-400: #fbd97a;
     --amber-500: #f59e0b;
+    --star-yellow: #FFC72C;
     --ink: #1F2937;
     --grey: #6b7280;
     --grey-light: #9aa3af;
@@ -62,26 +63,27 @@
   /* ---- Seletor de idioma ---- */
   .lang-switch {
     position: absolute;
-    top: 24px;
+    top: 20px;
     right: 16px;
     display: flex;
     align-items: center;
-    gap: 4px;
-    background: rgba(255,255,255,0.14);
+    gap: 6px;
+    background: rgba(7,22,51,0.68);
     -webkit-backdrop-filter: blur(6px);
     backdrop-filter: blur(6px);
-    border: 1px solid rgba(255,255,255,0.32);
+    border: 1.5px solid rgba(251,217,122,0.7);
     border-radius: 999px;
-    padding: 5px 10px 5px 9px;
+    padding: 7px 14px 7px 12px;
+    box-shadow: 0 6px 16px -6px rgba(0,0,0,0.55);
   }
-  .lang-switch-icon { font-size: 13px; line-height: 1; }
+  .lang-switch-icon { font-size: 15px; line-height: 1; }
   .lang-switch select {
     background: transparent;
     border: none;
     color: #fff;
-    font-size: 12px;
-    font-weight: 600;
-    max-width: 92px;
+    font-size: 13px;
+    font-weight: 700;
+    max-width: 96px;
   }
   .lang-switch select:focus { outline: none; }
 
@@ -211,9 +213,10 @@
     padding: 16px 18px;
     margin-bottom: 12px;
   }
-  .review-stars { color: var(--amber-500); font-size: 14px; letter-spacing: 1px; margin-bottom: 6px; }
+  .review-stars { color: var(--star-yellow); font-size: 14px; letter-spacing: 1px; margin-bottom: 6px; }
   .review-text { font-size: 14.5px; line-height: 1.5; color: var(--ink); margin: 0 0 8px; }
   .review-meta { font-size: 12.5px; color: var(--grey); }
+  .star-ic { color: var(--star-yellow); }
 
   .empty-state {
     background: #fffaf0;
@@ -241,6 +244,36 @@
     text-align: center;
     color: var(--grey);
     font-size: 13.5px;
+  }
+
+  /* ---- CTA da marca (Trustmore), no rodapé ---- */
+  .cta-brand {
+    margin-top: 34px;
+    background: linear-gradient(180deg, rgba(7,22,51,0.55) 0%, rgba(7,22,51,0.78) 100%);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(251,217,122,0.35);
+    border-radius: 20px;
+    padding: 22px 20px 24px;
+    text-align: center;
+  }
+  .cta-brand-title {
+    color: var(--gold-400);
+    font-size: 14.5px;
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+  .cta-brand-text {
+    color: rgba(255,255,255,0.8);
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0 0 16px;
+  }
+  .btn-cta-brand {
+    background: var(--gold-600);
+    color: #1a1200;
+    width: 100%;
+    justify-content: center;
   }
 
   footer {
@@ -297,7 +330,7 @@
         <span data-i18n>Chamar no WhatsApp</span>
       </a>
       <a class="btn btn-ghost" id="ctaReview" href="#" target="_blank" rel="noopener">
-        ★ <span data-i18n>Deixar avaliação</span>
+        <span class="star-ic">★</span> <span data-i18n>Deixar avaliação</span>
       </a>
     </div>
   </div>
@@ -310,6 +343,15 @@
   <div class="section" id="gallerySection" style="display:none;">
     <div class="section-title"><span data-i18n>Fotos do trabalho</span></div>
     <div class="gallery-teaser" data-i18n>Em breve: fotos de antes/depois dos serviços.</div>
+  </div>
+
+  <div class="cta-brand">
+    <div class="cta-brand-title" data-i18n>Tem um negócio de serviços?</div>
+    <p class="cta-brand-text" data-i18n>Crie sua própria página de avaliações como essa, em minutos.</p>
+    <a class="btn btn-cta-brand" id="ctaBrandWhatsapp" href="#" target="_blank" rel="noopener">
+      <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.29-1.39a9.9 9.9 0 0 0 4.7 1.2h.01c5.46 0 9.91-4.45 9.91-9.9 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 1.67c2.2 0 4.26.86 5.82 2.42a8.2 8.2 0 0 1 2.41 5.82c0 4.54-3.7 8.23-8.24 8.23a8.3 8.3 0 0 1-4.2-1.15l-.3-.18-3.14.82.84-3.06-.2-.32a8.18 8.18 0 0 1-1.26-4.37c0-4.54 3.7-8.23 8.24-8.23h.03Zm-3.06 4.2c-.16 0-.42.06-.64.3-.22.24-.85.83-.85 2.03s.87 2.36.99 2.52c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.43-.58 1.63-1.15.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28-.24-.12-1.43-.7-1.65-.78-.22-.08-.38-.12-.55.12-.16.24-.63.78-.77.94-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.35-.76-1.84-.2-.48-.4-.42-.55-.42h-.47Z"/></svg>
+      Fale com TRUSTMORE e crie sua página de avaliação
+    </a>
   </div>
 
   <footer>
@@ -335,6 +377,9 @@
     region: "Amsterdam e cidades vizinhas",
     whatsapp: "31684661615", // formato: código do país + número, sem espaços, sem +
     photoUrl: "karen-foto.jpg", // troque o arquivo (mesmo nome) para atualizar a foto
+
+    // WhatsApp da própria Trustmore (CTA no rodapé, para quem quiser criar a própria página).
+    brandWhatsapp: "31687678875",
 
     // Link do formulário onde os clientes deixam a avaliação (Google Forms).
     reviewFormUrl: "https://docs.google.com/forms/d/e/1FAIpQLScElDguULzVkPDWkFvu_qj__LUsYUMxtpNYVZK-HRXiob2qBA/viewform",
@@ -422,6 +467,11 @@
 
   document.getElementById("brandTag").textContent = CONFIG.brandName;
 
+  // CTA da marca (Trustmore) no rodapé — sempre em português, pois é o
+  // contato direto com a equipe Trustmore.
+  const brandContactMsg = "Olá! Vi uma página de avaliações feita pela Trustmore e quero saber mais sobre criar a minha 😊";
+  document.getElementById("ctaBrandWhatsapp").href = `https://wa.me/${CONFIG.brandWhatsapp}?text=${encodeURIComponent(brandContactMsg)}`;
+
   // Avatar: foto real se existir, senão iniciais
   const avatarEl = document.getElementById("avatar");
   if (CONFIG.photoUrl) {
@@ -489,7 +539,7 @@
   function renderReviews(reviews) {
     if (reviews.length > 0) {
       const avg = (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1);
-      ratingBadgeEl.innerHTML = `<div class="rating-badge">★ ${avg} · ${reviews.length} avaliação${reviews.length > 1 ? "ões" : ""}</div>`;
+      ratingBadgeEl.innerHTML = `<div class="rating-badge"><span class="star-ic">★</span> ${avg} · ${reviews.length} avaliação${reviews.length > 1 ? "ões" : ""}</div>`;
     } else {
       ratingBadgeEl.innerHTML = "";
     }
@@ -498,7 +548,7 @@
       reviewsContainer.innerHTML = `
         <div class="empty-state">
           <p><span data-i18n>Ainda não há avaliações públicas por aqui.</span><br><span data-i18n>Seja a primeira pessoa a avaliar o trabalho da ${escapeHtml(CONFIG.name.split(" ")[0])}!</span></p>
-          <a class="btn btn-primary" href="${CONFIG.reviewFormUrl}" target="_blank" rel="noopener">★ <span data-i18n>Deixar avaliação</span></a>
+          <a class="btn btn-primary" href="${CONFIG.reviewFormUrl}" target="_blank" rel="noopener"><span class="star-ic">★</span> <span data-i18n>Deixar avaliação</span></a>
         </div>`;
     } else {
       reviewsContainer.innerHTML = reviews.map(r => `
