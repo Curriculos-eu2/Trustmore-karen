@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ana Lisboa · Limpeza em geral · Trustmore</title>
+<meta name="description" content="Portfólio de avaliações de Ana Lisboa — Limpeza em geral em Haarlem e cidades vizinhas. Página Trustmore.">
+<meta name="theme-color" content="#011f59">
+
+<!-- Open Graph: como o link aparece quando compartilhado no WhatsApp -->
+<meta property="og:type" content="profile">
+<meta property="og:title" content="Ana Lisboa · Limpeza em geral · Trustmore">
+<meta property="og:description" content="Veja as avaliações de clientes de Ana Lisboa em Haarlem e cidades vizinhas.">
+<meta property="og:locale" content="pt_BR">
+
+<style>
+  :root {
+    --navy-900: #071633;
+    --navy-800: #0c2050;
+    --navy-700: #12305c;
+    --gold-600: #d99a2b;
+    --gold-400: #fbd97a;
+    --amber-500: #f59e0b;
+    --star-yellow: #FFC72C;
+    --ink: #1F2937;
+    --grey: #6b7280;
+    --grey-light: #9aa3af;
+    --bg: #faf9f7;
+    --card: #ffffff;
+    --border: #e8e6e1;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    min-height: 100%;
+    background-color: #011f59; /* cor de segurança enquanto a imagem carrega / caso não cubra tudo */
+    background-image: url("fundo.jpg");
+    background-size: cover;
+    background-position: center top;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page {
+    position: relative;
+    max-width: 480px;
+    margin: 0 auto;
+    padding: 28px 20px 56px;
+  }
+  .brand-tag {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: #fbd97a;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.45);
+    margin-bottom: 22px;
+  }
+
+  /* ---- Seletor de idioma ---- */
+  .lang-switch {
+    position: absolute;
+    top: 20px;
+    right: 16px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(7,22,51,0.68);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    border: 1.5px solid rgba(251,217,122,0.7);
+    border-radius: 999px;
+    padding: 7px 14px 7px 12px;
+    box-shadow: 0 6px 16px -6px rgba(0,0,0,0.55);
+  }
+  .lang-switch-icon { font-size: 15px; line-height: 1; }
+  .lang-switch select {
+    background: transparent;
+    border: none;
+    color: #fff;
+    font-size: 13px;
+    font-weight: 700;
+    max-width: 96px;
+  }
+  .lang-switch select:focus { outline: none; }
+
+  /* ---- Hero card ---- */
+  .hero {
+    background: linear-gradient(180deg, rgba(7,22,51,0.6) 0%, rgba(7,22,51,0.8) 100%);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(251,217,122,0.28);
+    border-radius: 24px;
+    padding: 32px 24px 28px;
+    text-align: center;
+    color: #fff;
+    box-shadow: 0 14px 34px -14px rgba(1,10,30,0.65);
+  }
+  .avatar {
+    width: 92px; height: 92px;
+    border-radius: 50%;
+    margin: 0 auto 16px;
+    background: rgba(255,255,255,0.12);
+    border: 3px solid rgba(251,217,122,0.55);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 32px; font-weight: 700;
+    color: #fff;
+  }
+  .hero h1 {
+    margin: 0 0 4px;
+    font-size: 24px;
+    font-weight: 700;
+  }
+  .hero .service {
+    margin: 0 0 2px;
+    font-size: 15px;
+    font-weight: 500;
+    color: rgba(255,255,255,0.92);
+  }
+  .hero .region {
+    margin: 0 0 18px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.75);
+  }
+  .hero .bio {
+    margin: -6px 0 18px;
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: rgba(255,255,255,0.88);
+    padding: 0 2px;
+  }
+  .lang-pills {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 6px;
+    margin: -6px 0 18px;
+  }
+  .lang-pill {
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 999px;
+    padding: 4px 11px;
+    font-size: 11.5px;
+    font-weight: 600;
+    color: #fff;
+  }
+  .rating-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(255,255,255,0.14);
+    border: 1px solid rgba(255,255,255,0.3);
+    border-radius: 999px;
+    padding: 6px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 18px;
+  }
+  .cta-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 18px;
+    border-radius: 14px;
+    font-size: 14.5px;
+    font-weight: 700;
+    text-decoration: none;
+    border: none;
+    cursor: pointer;
+    transition: transform 0.15s ease, opacity 0.15s ease;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn-primary {
+    background: #ffffff;
+    color: var(--navy-800);
+  }
+  .btn-ghost {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.45);
+  }
+
+  /* ---- Sections ---- */
+  .section {
+    margin-top: 30px;
+  }
+  .section-title {
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+    text-shadow: 0 1px 4px rgba(0,0,0,0.45);
+    margin: 0 0 14px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .review-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+  }
+  .review-stars { color: var(--star-yellow); font-size: 14px; letter-spacing: 1px; margin-bottom: 6px; }
+  .review-text { font-size: 14.5px; line-height: 1.5; color: var(--ink); margin: 0 0 8px; }
+  .review-meta { font-size: 12.5px; color: var(--grey); }
+  .star-ic { color: var(--star-yellow); }
+
+  .empty-state {
+    background: #fffaf0;
+    border: 1px dashed var(--gold-600);
+    border-radius: 16px;
+    padding: 26px 20px;
+    text-align: center;
+  }
+  .empty-state p {
+    margin: 0 0 14px;
+    font-size: 14px;
+    color: var(--navy-900);
+    line-height: 1.5;
+  }
+  .empty-state .btn-primary {
+    background: var(--navy-800);
+    color: #fff;
+  }
+
+  .gallery-teaser {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px;
+    text-align: center;
+    color: var(--grey);
+    font-size: 13.5px;
+  }
+
+  /* ---- CTA da marca (Trustmore), no rodapé ---- */
+  .cta-brand {
+    margin-top: 34px;
+    background: linear-gradient(180deg, rgba(7,22,51,0.55) 0%, rgba(7,22,51,0.78) 100%);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    border: 1px solid rgba(251,217,122,0.35);
+    border-radius: 20px;
+    padding: 22px 20px 24px;
+    text-align: center;
+  }
+  .cta-brand-title {
+    color: var(--gold-400);
+    font-size: 14.5px;
+    font-weight: 700;
+    margin: 0 0 6px;
+  }
+  .cta-brand-text {
+    color: rgba(255,255,255,0.8);
+    font-size: 13px;
+    line-height: 1.5;
+    margin: 0 0 16px;
+  }
+  .btn-cta-brand {
+    background: var(--gold-600);
+    color: #1a1200;
+  }
+
+  footer {
+    margin-top: 36px;
+    text-align: center;
+    font-size: 12px;
+    color: rgba(255,255,255,0.8);
+    text-shadow: 0 1px 3px rgba(0,0,0,0.4);
+    line-height: 1.6;
+  }
+  footer a { color: #fbd97a; text-decoration: none; font-weight: 600; }
+
+  /* ---- Rodapé da marca (Trustmore) — full-width, em toda página do produto ---- */
+  .brand-footer {
+    margin-top: 44px;
+    background: #f3ece1;
+    border-top: 1px solid rgba(7,22,51,0.14);
+    padding: 20px 20px;
+  }
+  .brand-footer-inner {
+    max-width: 480px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .brand-footer-logo {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .brand-footer-badge {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .brand-footer-name {
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--navy-900);
+  }
+  .brand-footer-contact {
+    text-align: right;
+  }
+  .brand-footer-phone {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 6px;
+    font-size: 13.5px;
+    font-weight: 700;
+    color: var(--navy-900);
+    text-decoration: none;
+  }
+  .brand-footer-location {
+    font-size: 12px;
+    color: var(--grey);
+    margin-top: 3px;
+  }
+
+  .icon { width: 16px; height: 16px; flex-shrink: 0; }
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <div class="lang-switch">
+    <span class="lang-switch-icon">🌐</span>
+    <select id="langSelect" aria-label="Idioma / Language">
+      <option value="pt">Português</option>
+      <option value="en">English</option>
+      <option value="nl">Nederlands</option>
+      <option value="es">Español</option>
+      <option value="fr">Français</option>
+      <option value="de">Deutsch</option>
+      <option value="it">Italiano</option>
+      <option value="pl">Polski</option>
+      <option value="ro">Română</option>
+      <option value="tr">Türkçe</option>
+      <option value="ar">العربية</option>
+      <option value="zh-CN">中文</option>
+    </select>
+  </div>
+
+  <div class="brand-tag" id="brandTag">Trustmore</div>
+
+  <div class="hero">
+    <div class="avatar" id="avatar"><!-- iniciais ou foto via JS --></div>
+    <h1 id="providerName">Ana Lisboa</h1>
+    <p class="service" id="providerService" data-i18n>Limpeza em geral</p>
+    <p class="region" id="providerRegion" data-i18n>Haarlem e cidades vizinhas</p>
+
+    <p class="bio" id="providerBio" data-i18n style="display:none;"></p>
+    <div class="lang-pills" id="providerLangs" style="display:none;"></div>
+
+    <div id="ratingBadge"></div>
+
+    <div class="cta-row">
+      <a class="btn btn-primary" id="ctaContact" href="#" target="_blank" rel="noopener">
+        <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.29-1.39a9.9 9.9 0 0 0 4.7 1.2h.01c5.46 0 9.91-4.45 9.91-9.9 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 1.67c2.2 0 4.26.86 5.82 2.42a8.2 8.2 0 0 1 2.41 5.82c0 4.54-3.7 8.23-8.24 8.23a8.3 8.3 0 0 1-4.2-1.15l-.3-.18-3.14.82.84-3.06-.2-.32a8.18 8.18 0 0 1-1.26-4.37c0-4.54 3.7-8.23 8.24-8.23h.03Zm-3.06 4.2c-.16 0-.42.06-.64.3-.22.24-.85.83-.85 2.03s.87 2.36.99 2.52c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.43-.58 1.63-1.15.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28-.24-.12-1.43-.7-1.65-.78-.22-.08-.38-.12-.55.12-.16.24-.63.78-.77.94-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.35-.76-1.84-.2-.48-.4-.42-.55-.42h-.47Z"/></svg>
+        <span data-i18n>Chamar no WhatsApp</span>
+      </a>
+      <a class="btn btn-ghost" id="ctaReview" href="#" target="_blank" rel="noopener">
+        <span class="star-ic">★</span> <span data-i18n>Deixar avaliação</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="section">
+    <div class="section-title"><span data-i18n>Avaliações de clientes</span></div>
+    <div id="reviewsContainer"></div>
+  </div>
+
+  <div class="section" id="gallerySection" style="display:none;">
+    <div class="section-title"><span data-i18n>Fotos do trabalho</span></div>
+    <div class="gallery-teaser" data-i18n>Em breve: fotos de antes/depois dos serviços.</div>
+  </div>
+
+  <div class="cta-brand">
+    <div class="cta-brand-title" data-i18n>Tem um negócio de serviços?</div>
+    <p class="cta-brand-text" data-i18n>Crie sua própria página de avaliações como essa, em minutos.</p>
+    <a class="btn btn-cta-brand" id="ctaBrandWhatsapp" href="#" target="_blank" rel="noopener">
+      <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2.05 22l5.29-1.39a9.9 9.9 0 0 0 4.7 1.2h.01c5.46 0 9.91-4.45 9.91-9.9 0-2.65-1.03-5.14-2.9-7.01A9.82 9.82 0 0 0 12.04 2Zm0 1.67c2.2 0 4.26.86 5.82 2.42a8.2 8.2 0 0 1 2.41 5.82c0 4.54-3.7 8.23-8.24 8.23a8.3 8.3 0 0 1-4.2-1.15l-.3-.18-3.14.82.84-3.06-.2-.32a8.18 8.18 0 0 1-1.26-4.37c0-4.54 3.7-8.23 8.24-8.23h.03Zm-3.06 4.2c-.16 0-.42.06-.64.3-.22.24-.85.83-.85 2.03s.87 2.36.99 2.52c.12.16 1.7 2.6 4.12 3.64.58.25 1.03.4 1.38.51.58.18 1.11.16 1.53.1.47-.07 1.43-.58 1.63-1.15.2-.56.2-1.04.14-1.14-.06-.1-.22-.16-.46-.28-.24-.12-1.43-.7-1.65-.78-.22-.08-.38-.12-.55.12-.16.24-.63.78-.77.94-.14.16-.28.18-.52.06-.24-.12-1.02-.38-1.94-1.2-.72-.64-1.2-1.43-1.34-1.67-.14-.24-.02-.37.1-.49.11-.11.24-.28.36-.42.12-.14.16-.24.24-.4.08-.16.04-.3-.02-.42-.06-.12-.55-1.35-.76-1.84-.2-.48-.4-.42-.55-.42h-.47Z"/></svg>
+      Fale com a TRUSTMORE
+    </a>
+  </div>
+
+  <footer>
+    Página pessoal de avaliações de <span id="footerName">Ana Lisboa</span>.<br>
+    <span id="footerBrand" data-i18n>Feito com carinho para clientes de confiança 💛</span>
+  </footer>
+
+</div>
+
+<div class="brand-footer">
+  <div class="brand-footer-inner">
+    <div class="brand-footer-logo">
+      <svg class="brand-footer-badge" viewBox="0 0 40 40">
+        <circle cx="20" cy="20" r="20" fill="#d99a2b"/>
+        <ellipse cx="14" cy="18" rx="2.2" ry="3" fill="#3b2412"/>
+        <ellipse cx="26" cy="18" rx="2.2" ry="3" fill="#3b2412"/>
+        <path d="M12 24 Q20 31 28 24" stroke="#3b2412" stroke-width="2.4" fill="none" stroke-linecap="round"/>
+      </svg>
+      <span class="brand-footer-name">trustmore</span>
+    </div>
+    <div class="brand-footer-contact">
+      <a class="brand-footer-phone" href="tel:+31687678875">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.850.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        +31 6 87678875
+      </a>
+      <div class="brand-footer-location">Amsterdam, Netherlands</div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // ------------------------------------------------------------------
+  // CONFIGURAÇÃO — edite só aqui para criar a página de um novo cliente
+  // Veja o checklist de onboarding para o passo a passo completo.
+  // ------------------------------------------------------------------
+  const CONFIG = {
+    brandName: "Trustmore", // nome do produto, aparece no topo da página — não mexer
+    name: "Ana Lisboa",
+    service: "Limpeza em geral",
+    region: "Haarlem e cidades vizinhas",
+    whatsapp: "31682664076", // formato: código do país + número, sem espaços, sem +
+    photoUrl: "foto.jpg", // arquivo de foto do cliente, mesma pasta deste index.html
+
+    // WhatsApp da própria Trustmore (CTA no rodapé, para quem quiser criar a própria página). Não mexer.
+    brandWhatsapp: "31687678875",
+
+    // Link do formulário onde os clientes deixam a avaliação (Google Forms).
+    reviewFormUrl: "https://docs.google.com/forms/d/e/1FAIpQLSf_48ClMPYofR4wiHxo_-6uimsPDtoHJRCMvHTIEjv-rqMe4A/viewform",
+
+    // Link da planilha (aba "Publicado") como CSV — é de onde a página busca
+    // as avaliações aprovadas automaticamente. Não precisa editar isso no dia a dia.
+    reviewsCsvUrl: "https://docs.google.com/spreadsheets/d/1MRBUcXVLltSSzGJYN_UjzuOnAf0l0ZEApPoiPR0URHo/gviz/tq?tqx=out:csv&sheet=Publicado",
+
+    // Link da planilha (aba "Perfil") como CSV — de onde vêm as edições de
+    // perfil que o cliente faz pela Área dele (nome, cidade, whatsapp, bio, idiomas).
+    profileCsvUrl: "https://docs.google.com/spreadsheets/d/1MRBUcXVLltSSzGJYN_UjzuOnAf0l0ZEApPoiPR0URHo/gviz/tq?tqx=out:csv&sheet=Perfil",
+
+    reviews: [
+      // Avaliações fixas (opcional). As avaliações reais dos clientes aparecem
+      // automaticamente vindas do formulário — não precisa mexer aqui.
+    ],
+  };
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  // ------------------------------------------------------------------
+  // Tradução simples (opcional, via seletor de idioma no topo)
+  // ------------------------------------------------------------------
+  let currentLang = "pt";
+  const originalTextMap = new WeakMap();
+  const translationCache = new Map();
+
+  function setTranslatable(el, text) {
+    if (!el) return;
+    originalTextMap.delete(el);
+    el.textContent = text;
+  }
+
+  async function translateText(text, targetLang) {
+    try {
+      const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=pt&tl=${encodeURIComponent(targetLang)}&dt=t&q=${encodeURIComponent(text)}`;
+      const res = await fetch(url);
+      if (!res.ok) throw new Error("Falha na tradução");
+      const data = await res.json();
+      return data[0].map(seg => seg[0]).join("");
+    } catch (err) {
+      console.warn("Não foi possível traduzir, mantendo texto original:", err);
+      return text;
+    }
+  }
+
+  async function applyLanguage(lang) {
+    currentLang = lang;
+    const els = Array.from(document.querySelectorAll("[data-i18n]"));
+
+    if (lang === "pt") {
+      els.forEach(el => {
+        const orig = originalTextMap.get(el);
+        if (orig !== undefined) el.textContent = orig;
+      });
+      return;
+    }
+
+    els.forEach(el => {
+      if (!originalTextMap.has(el)) originalTextMap.set(el, el.textContent);
+    });
+
+    await Promise.all(els.map(async el => {
+      const original = originalTextMap.get(el);
+      if (!original || !original.trim()) return;
+      const cacheKey = lang + "::" + original;
+      let translated = translationCache.get(cacheKey);
+      if (!translated) {
+        translated = await translateText(original, lang);
+        translationCache.set(cacheKey, translated);
+      }
+      el.textContent = translated;
+    }));
+  }
+
+  const langSelect = document.getElementById("langSelect");
+  langSelect.addEventListener("change", e => applyLanguage(e.target.value));
+
+  document.getElementById("brandTag").textContent = CONFIG.brandName;
+
+  const brandContactMsg = "Olá! Vi uma página de avaliações feita pela Trustmore e quero saber mais sobre criar a minha 😊";
+  document.getElementById("ctaBrandWhatsapp").href = `https://wa.me/${CONFIG.brandWhatsapp}?text=${encodeURIComponent(brandContactMsg)}`;
+
+  const avatarEl = document.getElementById("avatar");
+  if (CONFIG.photoUrl) {
+    avatarEl.style.backgroundImage = `url(${CONFIG.photoUrl})`;
+    avatarEl.style.backgroundSize = "cover";
+    avatarEl.style.backgroundPosition = "center";
+  }
+
+  function applyProfile(profile) {
+    const name = profile.nome || CONFIG.name;
+    const service = profile.servico || CONFIG.service;
+    const region = profile.cidade || CONFIG.region;
+    const whatsappRaw = (profile.whatsapp || CONFIG.whatsapp || "").replace(/\D/g, "");
+    const bio = profile.bio || "";
+    const languages = (profile.idiomas || "").split(",").map(s => s.trim()).filter(Boolean);
+
+    document.getElementById("providerName").textContent = name;
+    setTranslatable(document.getElementById("providerService"), service);
+    setTranslatable(document.getElementById("providerRegion"), region);
+    document.getElementById("footerName").textContent = name;
+    document.title = `${name} · ${service} · ${CONFIG.brandName}`;
+
+    if (!CONFIG.photoUrl) {
+      const initials = name.split(" ").filter(Boolean).slice(0, 2).map(w => w[0].toUpperCase()).join("");
+      avatarEl.textContent = initials;
+    }
+
+    const contactMsg = `Olá ${name.split(" ")[0]}! Vi seu portfólio de avaliações e gostaria de saber mais sobre seus serviços 😊`;
+    document.getElementById("ctaContact").href = `https://wa.me/${whatsappRaw}?text=${encodeURIComponent(contactMsg)}`;
+    document.getElementById("ctaReview").href = CONFIG.reviewFormUrl;
+
+    const bioEl = document.getElementById("providerBio");
+    if (bio) {
+      setTranslatable(bioEl, bio);
+      bioEl.style.display = "";
+    } else {
+      bioEl.style.display = "none";
+    }
+
+    const langsEl = document.getElementById("providerLangs");
+    if (languages.length) {
+      langsEl.innerHTML = languages.map(l => `<span class="lang-pill" data-i18n>${escapeHtml(l)}</span>`).join("");
+      langsEl.style.display = "";
+    } else {
+      langsEl.innerHTML = "";
+      langsEl.style.display = "none";
+    }
+
+    CONFIG.name = name;
+
+    if (currentLang !== "pt") applyLanguage(currentLang);
+    refreshReviewsRender();
+  }
+
+  const ratingBadgeEl = document.getElementById("ratingBadge");
+  const reviewsContainer = document.getElementById("reviewsContainer");
+  let latestReviews = CONFIG.reviews;
+
+  function renderReviews(reviews) {
+    if (reviews.length > 0) {
+      const avg = (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1);
+      ratingBadgeEl.innerHTML = `<div class="rating-badge"><span class="star-ic">★</span> ${avg} · ${reviews.length} avaliação${reviews.length > 1 ? "ões" : ""}</div>`;
+    } else {
+      ratingBadgeEl.innerHTML = "";
+    }
+
+    if (reviews.length === 0) {
+      reviewsContainer.innerHTML = `
+        <div class="empty-state">
+          <p><span data-i18n>Ainda não há avaliações públicas por aqui.</span><br><span data-i18n>Seja a primeira pessoa a avaliar o trabalho da ${escapeHtml(CONFIG.name.split(" ")[0])}!</span></p>
+          <a class="btn btn-primary" href="${CONFIG.reviewFormUrl}" target="_blank" rel="noopener"><span class="star-ic">★</span> <span data-i18n>Deixar avaliação</span></a>
+        </div>`;
+    } else {
+      reviewsContainer.innerHTML = reviews.map(r => `
+        <div class="review-card">
+          <div class="review-stars">${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}</div>
+          <p class="review-text">"<span data-i18n>${escapeHtml(r.text)}</span>"</p>
+          <div class="review-meta">${escapeHtml(r.name)}${r.date ? " · " + escapeHtml(r.date) : ""}</div>
+        </div>
+      `).join("");
+    }
+  }
+
+  function refreshReviewsRender() {
+    renderReviews(latestReviews);
+    if (currentLang !== "pt") applyLanguage(currentLang);
+  }
+
+  applyProfile({});
+
+  function parseCSV(text) {
+    const rows = [];
+    let row = [], field = "", inQuotes = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (inQuotes) {
+        if (c === '"') {
+          if (text[i + 1] === '"') { field += '"'; i++; }
+          else { inQuotes = false; }
+        } else {
+          field += c;
+        }
+      } else if (c === '"') {
+        inQuotes = true;
+      } else if (c === ",") {
+        row.push(field); field = "";
+      } else if (c === "\n") {
+        row.push(field); rows.push(row); row = []; field = "";
+      } else if (c === "\r") {
+        // ignora
+      } else {
+        field += c;
+      }
+    }
+    if (field.length || row.length) { row.push(field); rows.push(row); }
+    return rows.filter(r => r.some(cell => cell.trim() !== ""));
+  }
+
+  if (CONFIG.reviewsCsvUrl) {
+    fetch(CONFIG.reviewsCsvUrl, { cache: "no-store" })
+      .then(res => { if (!res.ok) throw new Error("Falha ao buscar avaliações"); return res.text(); })
+      .then(text => {
+        const rows = parseCSV(text);
+        if (rows.length <= 1) return;
+
+        const header = rows[0].map(h => h.trim().toLowerCase());
+        const idxNome = header.indexOf("nome");
+        const idxNota = header.indexOf("nota");
+        const idxComentario = header.indexOf("comentario");
+        const idxData = header.indexOf("data");
+
+        const fetched = rows.slice(1).map(cols => {
+          const rating = parseInt(cols[idxNota], 10);
+          return {
+            name: (cols[idxNome] || "Cliente").trim(),
+            rating: Number.isFinite(rating) ? Math.min(5, Math.max(1, rating)) : 5,
+            text: (cols[idxComentario] || "").trim(),
+            date: (cols[idxData] || "").trim(),
+          };
+        }).filter(r => r.text !== "");
+
+        if (fetched.length > 0) {
+          latestReviews = fetched;
+          refreshReviewsRender();
+        }
+      })
+      .catch(err => {
+        console.warn("Não foi possível carregar as avaliações da planilha:", err);
+      });
+  }
+
+  if (CONFIG.profileCsvUrl) {
+    fetch(CONFIG.profileCsvUrl, { cache: "no-store" })
+      .then(res => { if (!res.ok) throw new Error("Falha ao buscar perfil"); return res.text(); })
+      .then(text => {
+        const rows = parseCSV(text);
+        if (rows.length <= 1) return;
+
+        const header = rows[0].map(h => h.trim().toLowerCase());
+        const last = rows[rows.length - 1];
+        const idx = name => header.indexOf(name);
+
+        const profile = {
+          servico: (last[idx("serviço")] || "").trim(),
+          cidade: (last[idx("cidade")] || "").trim(),
+          whatsapp: (last[idx("whatsapp")] || "").trim(),
+          bio: (last[idx("bio")] || "").trim(),
+          idiomas: (last[idx("idiomas")] || "").trim(),
+          nome: (last[idx("nome")] || "").trim(),
+        };
+
+        applyProfile(profile);
+      })
+      .catch(err => {
+        console.warn("Não foi possível carregar o perfil da planilha, usando os valores padrão:", err);
+      });
+  }
+</script>
+
+</body>
+</html>
