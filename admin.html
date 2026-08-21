@@ -162,8 +162,8 @@
     // CSV com TODOS os comentários recebidos (aba "Form Responses 1")
     allReviewsCsvUrl: "https://docs.google.com/spreadsheets/d/1_opJeaBCjehlQq77SL-L47XwVg4dgJrV9aBscMZpZ-M/gviz/tq?tqx=out:csv&sheet=" + encodeURIComponent("Form Responses 1"),
 
-    // CSV com os comentários já aprovados (aba "Publicado")
-    approvedCsvUrl: "https://docs.google.com/spreadsheets/d/1_opJeaBCjehlQq77SL-L47XwVg4dgJrV9aBscMZpZ-M/gviz/tq?tqx=out:csv&sheet=Publicado",
+    // CSV com os IDs (timestamps) já aprovados (aba "Aprovacoes")
+    approvedCsvUrl: "https://docs.google.com/spreadsheets/d/1_opJeaBCjehlQq77SL-L47XwVg4dgJrV9aBscMZpZ-M/gviz/tq?tqx=out:csv&sheet=Aprovacoes",
 
     // Formulário "Aprovações" — enviar o Timestamp aqui marca a avaliação como aprovada
     approveFormActionUrl: "https://docs.google.com/forms/d/e/1FAIpQLSdHvoXZ3iOMwhGK2aDPD8PvENF7KIuzAEyP0FhJPqjb8D_8pg/formResponse",
@@ -294,8 +294,9 @@
       const idxNota = header.findIndex(h => h.startsWith("nota"));
       const idxComentario = header.indexOf("comentário");
 
+      // Aprovacoes: coluna A = Timestamp da aprovação, coluna B = "ID da avaliação" (timestamp original)
       const approvedTimestamps = new Set(
-        approvedRows.slice(1).map(r => (r[3] || "").trim()).filter(Boolean)
+        approvedRows.slice(1).map(r => (r[1] || "").trim()).filter(Boolean)
       );
 
       const all = allRows.slice(1).map(cols => ({
