@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Área de {{NOME}} · Trustmore</title>
+
+<style>
+  :root {
+    --navy-900: #071633;
+    --navy-800: #0c2050;
+    --navy-700: #12305c;
+    --gold-600: #d99a2b;
+    --gold-400: #fbd97a;
+    --amber-500: #f59e0b;
+    --star-yellow: #FFC72C;
+    --ink: #1F2937;
+    --grey: #6b7280;
+    --bg: #faf9f7;
+    --card: #ffffff;
+    --border: #e8e6e1;
+    --green: #1a9c5c;
+  }
+  * { box-sizing: border-box; }
+  html, body {
+    margin: 0; padding: 0;
+    min-height: 100%;
+    background: linear-gradient(180deg, var(--navy-900) 0%, var(--navy-800) 100%);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .page {
+    max-width: 560px;
+    margin: 0 auto;
+    padding: 28px 20px 56px;
+  }
+  .brand-tag {
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--gold-400);
+    margin-bottom: 6px;
+  }
+  h1 {
+    text-align: center;
+    color: #fff;
+    font-size: 22px;
+    margin: 0 0 4px;
+  }
+  .subtitle {
+    text-align: center;
+    color: rgba(255,255,255,0.75);
+    font-size: 13.5px;
+    margin: 0 0 26px;
+    line-height: 1.5;
+  }
+  .status {
+    text-align: center;
+    color: rgba(255,255,255,0.7);
+    font-size: 13.5px;
+    margin: 20px 0;
+  }
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 18px 18px 16px;
+    margin-bottom: 14px;
+  }
+  .card-stars { color: var(--star-yellow); font-size: 15px; letter-spacing: 1px; margin-bottom: 8px; }
+  .card-text { font-size: 15px; line-height: 1.5; color: var(--ink); margin: 0 0 10px; }
+  .card-meta { font-size: 12.5px; color: var(--grey); margin-bottom: 14px; }
+  .card-actions { display: flex; gap: 10px; }
+  .btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 11px 14px;
+    border-radius: 12px;
+    font-size: 14px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    transition: opacity 0.15s ease, transform 0.1s ease;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { opacity: 0.55; cursor: default; }
+  .btn-approve {
+    background: var(--green);
+    color: #fff;
+  }
+  .card.done {
+    opacity: 0.55;
+  }
+  .card-approved-tag {
+    display: inline-block;
+    background: rgba(26,156,92,0.12);
+    color: var(--green);
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .empty-state {
+    background: rgba(255,255,255,0.08);
+    border: 1px dashed rgba(255,255,255,0.35);
+    border-radius: 16px;
+    padding: 26px 20px;
+    text-align: center;
+    color: rgba(255,255,255,0.85);
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .refresh-row {
+    text-align: center;
+    margin-top: 22px;
+  }
+  .btn-refresh {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.35);
+    padding: 10px 20px;
+    border-radius: 12px;
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  .section-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: #fff;
+    margin: 26px 0 12px;
+  }
+
+  /* ---- Meu perfil ---- */
+  .profile-box {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 16px;
+    padding: 16px 16px 18px;
+    margin-bottom: 18px;
+  }
+  .profile-box-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold-400);
+    margin-bottom: 4px;
+  }
+  .profile-box-hint {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 14px;
+    line-height: 1.4;
+  }
+  .field { margin-bottom: 12px; }
+  .field label {
+    display: block;
+    font-size: 12.5px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 5px;
+  }
+  .field .field-hint {
+    font-size: 11.5px;
+    color: rgba(255,255,255,0.5);
+    margin-top: 4px;
+  }
+  .field input[type="text"],
+  .field textarea {
+    width: 100%;
+    background: rgba(0,0,0,0.22);
+    border: 1px solid rgba(255,255,255,0.22);
+    border-radius: 10px;
+    padding: 10px 12px;
+    font-size: 14px;
+    color: #fff;
+    font-family: inherit;
+  }
+  .field input[type="text"]::placeholder,
+  .field textarea::placeholder { color: rgba(255,255,255,0.35); }
+  .field input[type="text"]:focus,
+  .field textarea:focus { outline: none; border-color: var(--gold-400); }
+  .field textarea { min-height: 78px; resize: vertical; }
+  .btn-save {
+    width: 100%;
+    background: var(--gold-600);
+    color: #1a1200;
+    margin-top: 4px;
+  }
+  .profile-save-status {
+    text-align: center;
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.75);
+    margin-top: 10px;
+    min-height: 16px;
+  }
+  .profile-save-status.ok { color: #6fe3a8; font-weight: 600; }
+  .profile-save-status.err { color: #ff9d9d; font-weight: 600; }
+
+  .links-box {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.18);
+    border-radius: 16px;
+    padding: 16px 16px 18px;
+    margin-bottom: 24px;
+  }
+  .links-box-title {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--gold-400);
+    margin-bottom: 12px;
+  }
+  .link-item + .link-item {
+    margin-top: 14px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(255,255,255,0.12);
+  }
+  .link-label {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: rgba(255,255,255,0.9);
+    margin-bottom: 2px;
+  }
+  .link-hint {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    margin-bottom: 8px;
+    line-height: 1.4;
+  }
+  .link-value {
+    font-size: 12.5px;
+    color: rgba(255,255,255,0.85);
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    padding: 8px 10px;
+    word-break: break-all;
+    margin-bottom: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+  .link-actions { display: flex; gap: 8px; }
+  .btn-copy, .btn-open {
+    flex: 1;
+    text-align: center;
+    padding: 9px 10px;
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 700;
+    border: none;
+    cursor: pointer;
+    text-decoration: none;
+  }
+  .btn-copy {
+    background: var(--gold-600);
+    color: #1a1200;
+  }
+  .btn-copy.copied {
+    background: var(--green);
+    color: #fff;
+  }
+  .btn-open {
+    background: rgba(255,255,255,0.12);
+    color: #fff;
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+</style>
+</head>
+<body>
+
+<div class="page">
+  <div class="brand-tag">Trustmore</div>
+  <h1>Área de {{NOME}}</h1>
+  <p class="subtitle">Aqui aparecem os comentários que os clientes deixaram.<br>Toque em <strong>Aprovar</strong> para publicar no seu link.</p>
+
+  <div class="profile-box">
+    <div class="profile-box-title">👤 Meu perfil</div>
+    <div class="profile-box-hint">O que você salvar aqui aparece automaticamente no seu link público — sempre que quiser, é só editar e salvar de novo.</div>
+
+    <form id="profileForm">
+      <div class="field">
+        <label for="fNome">Nome</label>
+        <input type="text" id="fNome" placeholder="Seu nome">
+      </div>
+      <div class="field">
+        <label for="fServico">Serviço</label>
+        <input type="text" id="fServico" placeholder="Ex: Limpezas em geral">
+      </div>
+      <div class="field">
+        <label for="fCidade">Cidade</label>
+        <input type="text" id="fCidade" placeholder="Ex: Amsterdam e cidades vizinhas">
+      </div>
+      <div class="field">
+        <label for="fWhatsapp">WhatsApp</label>
+        <input type="text" id="fWhatsapp" placeholder="Ex: 31684661615">
+        <div class="field-hint">Código do país + número, sem espaços e sem +.</div>
+      </div>
+      <div class="field">
+        <label for="fIdiomas">Idiomas que você fala</label>
+        <input type="text" id="fIdiomas" placeholder="Ex: Português, Inglês, Neerlandês">
+        <div class="field-hint">Separe por vírgula.</div>
+      </div>
+      <div class="field">
+        <label for="fBio">Biografia curta</label>
+        <textarea id="fBio" placeholder="Conte um pouco sobre você e seu trabalho…"></textarea>
+      </div>
+
+      <button type="submit" class="btn btn-save" id="saveProfileBtn">💾 Salvar alterações</button>
+      <div class="profile-save-status" id="profileSaveStatus"></div>
+    </form>
+  </div>
+
+  <div class="links-box">
+    <div class="links-box-title">🔗 Meus links</div>
+
+    <div class="link-item">
+      <div class="link-label">Link pra pedir avaliação</div>
+      <div class="link-hint">Manda esse link pro cliente depois do serviço, pra ele deixar o comentário.</div>
+      <div class="link-value" id="linkReview">carregando…</div>
+      <div class="link-actions">
+        <button type="button" class="btn-copy" data-target="linkReview">📋 Copiar</button>
+        <a class="btn-open" id="linkReviewOpen" href="#" target="_blank" rel="noopener">Abrir</a>
+      </div>
+    </div>
+
+    <div class="link-item">
+      <div class="link-label">Link do seu perfil</div>
+      <div class="link-hint">É o link público, com suas avaliações — pode divulgar pra quem quiser.</div>
+      <div class="link-value" id="linkProfile">carregando…</div>
+      <div class="link-actions">
+        <button type="button" class="btn-copy" data-target="linkProfile">📋 Copiar</button>
+        <a class="btn-open" id="linkProfileOpen" href="#" target="_blank" rel="noopener">Abrir</a>
+      </div>
+    </div>
+
+    <div class="link-item">
+      <div class="link-label">Esta página (Área do cliente)</div>
+      <div class="link-hint">É essa página aqui — guarde/favorite este link, é só com ele que você aprova os comentários e edita seu perfil.</div>
+      <div class="link-value" id="linkAdmin">carregando…</div>
+      <div class="link-actions">
+        <button type="button" class="btn-copy" data-target="linkAdmin">📋 Copiar</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-title">💬 Comentários</div>
+  <div id="statusMsg" class="status">Carregando comentários…</div>
+  <div id="pendingContainer"></div>
+
+  <div class="refresh-row">
+    <button class="btn-refresh" id="refreshBtn">↻ Atualizar lista</button>
+  </div>
+</div>
+
+<script>
+  // ------------------------------------------------------------------
+  // CONFIGURAÇÃO — preencha com os dados da planilha e dos 3 formulários
+  // criados para este cliente. Veja o checklist de onboarding.
+  // ------------------------------------------------------------------
+  const CONFIG = {
+    // CSV com TODOS os comentários recebidos (aba "Form Responses 1")
+    allReviewsCsvUrl: "https://docs.google.com/spreadsheets/d/{{SHEET_ID}}/gviz/tq?tqx=out:csv&sheet=" + encodeURIComponent("Form Responses 1"),
+
+    // CSV com os IDs (timestamps) já aprovados (aba "Aprovacoes")
+    approvedCsvUrl: "https://docs.google.com/spreadsheets/d/{{SHEET_ID}}/gviz/tq?tqx=out:csv&sheet=Aprovacoes",
+
+    // Formulário "Aprovações" — enviar o Timestamp aqui marca a avaliação como aprovada
+    approveFormActionUrl: "https://docs.google.com/forms/d/e/{{APROVACAO_FORM_ID}}/formResponse",
+    approveEntryId: "{{APROVACAO_ENTRY_ID}}",
+
+    // CSV com o histórico de edições de perfil (aba "Perfil")
+    profileCsvUrl: "https://docs.google.com/spreadsheets/d/{{SHEET_ID}}/gviz/tq?tqx=out:csv&sheet=Perfil",
+
+    // Formulário "Perfil — Trustmore" — cada envio vira uma nova linha na aba
+    // "Perfil"; a página pública sempre usa a linha mais recente.
+    profileFormActionUrl: "https://docs.google.com/forms/d/e/{{PERFIL_FORM_ID}}/formResponse",
+    profileEntryIds: {
+      servico: "{{PERFIL_ENTRY_SERVICO}}",
+      cidade: "{{PERFIL_ENTRY_CIDADE}}",
+      whatsapp: "{{PERFIL_ENTRY_WHATSAPP}}",
+      bio: "{{PERFIL_ENTRY_BIO}}",
+      idiomas: "{{PERFIL_ENTRY_IDIOMAS}}",
+      nome: "{{PERFIL_ENTRY_NOME}}",
+    },
+
+    // Links prontos, mostrados na seção "Meus links"
+    reviewFormUrl: "https://docs.google.com/forms/d/e/{{REVIEW_FORM_ID}}/viewform",
+    profileUrl: "https://trustmore.app/{{SLUG}}/",
+    adminUrl: "https://trustmore.app/{{SLUG}}/admin.html",
+  };
+
+  function parseCSV(text) {
+    const rows = [];
+    let row = [], field = "", inQuotes = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (inQuotes) {
+        if (c === '"') {
+          if (text[i + 1] === '"') { field += '"'; i++; }
+          else { inQuotes = false; }
+        } else {
+          field += c;
+        }
+      } else if (c === '"') {
+        inQuotes = true;
+      } else if (c === ",") {
+        row.push(field); field = "";
+      } else if (c === "\n") {
+        row.push(field); rows.push(row); row = []; field = "";
+      } else if (c === "\r") {
+        // ignora
+      } else {
+        field += c;
+      }
+    }
+    if (field.length || row.length) { row.push(field); rows.push(row); }
+    return rows.filter(r => r.some(cell => cell.trim() !== ""));
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  const LINKS = {
+    linkReview: CONFIG.reviewFormUrl,
+    linkProfile: CONFIG.profileUrl,
+    linkAdmin: CONFIG.adminUrl,
+  };
+
+  document.getElementById("linkReview").textContent = LINKS.linkReview;
+  document.getElementById("linkReviewOpen").href = LINKS.linkReview;
+  document.getElementById("linkProfile").textContent = LINKS.linkProfile;
+  document.getElementById("linkProfileOpen").href = LINKS.linkProfile;
+  document.getElementById("linkAdmin").textContent = LINKS.linkAdmin;
+
+  document.querySelectorAll(".btn-copy").forEach(btn => {
+    btn.addEventListener("click", async () => {
+      const targetId = btn.getAttribute("data-target");
+      const text = LINKS[targetId] || "";
+      let copied = false;
+      try {
+        await navigator.clipboard.writeText(text);
+        copied = true;
+      } catch (e) {
+        try {
+          const el = document.getElementById(targetId);
+          const range = document.createRange();
+          range.selectNode(el);
+          window.getSelection().removeAllRanges();
+          window.getSelection().addRange(range);
+          copied = document.execCommand("copy");
+          window.getSelection().removeAllRanges();
+        } catch (e2) {
+          copied = false;
+        }
+      }
+      const original = btn.textContent;
+      btn.textContent = copied ? "✓ Copiado" : "Não copiou, selecione manualmente";
+      if (copied) btn.classList.add("copied");
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.classList.remove("copied");
+      }, 1800);
+    });
+  });
+
+  const profileForm = document.getElementById("profileForm");
+  const saveProfileBtn = document.getElementById("saveProfileBtn");
+  const profileSaveStatus = document.getElementById("profileSaveStatus");
+  const fNome = document.getElementById("fNome");
+  const fServico = document.getElementById("fServico");
+  const fCidade = document.getElementById("fCidade");
+  const fWhatsapp = document.getElementById("fWhatsapp");
+  const fIdiomas = document.getElementById("fIdiomas");
+  const fBio = document.getElementById("fBio");
+
+  // Valores padrão (mesmos do CONFIG do index.html), usados enquanto não
+  // existir nenhuma edição salva ainda na aba "Perfil".
+  const DEFAULT_PROFILE = {
+    nome: "{{NOME}}",
+    servico: "{{SERVICO}}",
+    cidade: "{{CIDADE}}",
+    whatsapp: "{{WHATSAPP}}",
+    idiomas: "",
+    bio: "",
+  };
+
+  function fillProfileForm(profile) {
+    fNome.value = profile.nome || "";
+    fServico.value = profile.servico || "";
+    fCidade.value = profile.cidade || "";
+    fWhatsapp.value = profile.whatsapp || "";
+    fIdiomas.value = profile.idiomas || "";
+    fBio.value = profile.bio || "";
+  }
+
+  async function loadProfile() {
+    try {
+      const res = await fetch(CONFIG.profileCsvUrl, { cache: "no-store" });
+      if (!res.ok) throw new Error("Falha ao buscar perfil");
+      const rows = parseCSV(await res.text());
+      if (rows.length <= 1) {
+        fillProfileForm(DEFAULT_PROFILE);
+        return;
+      }
+      const header = rows[0].map(h => h.trim().toLowerCase());
+      const last = rows[rows.length - 1];
+      const idx = name => header.indexOf(name);
+      fillProfileForm({
+        nome: (last[idx("nome")] || "").trim(),
+        servico: (last[idx("serviço")] || "").trim(),
+        cidade: (last[idx("cidade")] || "").trim(),
+        whatsapp: (last[idx("whatsapp")] || "").trim(),
+        idiomas: (last[idx("idiomas")] || "").trim(),
+        bio: (last[idx("bio")] || "").trim(),
+      });
+    } catch (err) {
+      console.warn("Não foi possível carregar o perfil salvo, usando os valores padrão:", err);
+      fillProfileForm(DEFAULT_PROFILE);
+    }
+  }
+
+  profileForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    saveProfileBtn.disabled = true;
+    saveProfileBtn.textContent = "Salvando…";
+    profileSaveStatus.textContent = "";
+    profileSaveStatus.className = "profile-save-status";
+
+    try {
+      const body = new URLSearchParams();
+      body.set(CONFIG.profileEntryIds.nome, fNome.value.trim());
+      body.set(CONFIG.profileEntryIds.servico, fServico.value.trim());
+      body.set(CONFIG.profileEntryIds.cidade, fCidade.value.trim());
+      body.set(CONFIG.profileEntryIds.whatsapp, fWhatsapp.value.trim());
+      body.set(CONFIG.profileEntryIds.idiomas, fIdiomas.value.trim());
+      body.set(CONFIG.profileEntryIds.bio, fBio.value.trim());
+
+      await fetch(CONFIG.profileFormActionUrl, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body.toString(),
+      });
+
+      profileSaveStatus.textContent = "✓ Perfil atualizado! Já vai aparecer no seu link público.";
+      profileSaveStatus.className = "profile-save-status ok";
+    } catch (err) {
+      profileSaveStatus.textContent = "Não foi possível salvar agora. Verifique sua internet e tente de novo.";
+      profileSaveStatus.className = "profile-save-status err";
+    } finally {
+      saveProfileBtn.disabled = false;
+      saveProfileBtn.textContent = "💾 Salvar alterações";
+    }
+  });
+
+  loadProfile();
+
+  const statusMsg = document.getElementById("statusMsg");
+  const pendingContainer = document.getElementById("pendingContainer");
+  const refreshBtn = document.getElementById("refreshBtn");
+
+  async function fetchCsvRows(url) {
+    const res = await fetch(url, { cache: "no-store" });
+    if (!res.ok) throw new Error("Falha ao buscar dados (" + res.status + ")");
+    const text = await res.text();
+    return parseCSV(text);
+  }
+
+  function renderPending(items) {
+    if (items.length === 0) {
+      statusMsg.textContent = "";
+      pendingContainer.innerHTML = `
+        <div class="empty-state">
+          Nenhum comentário pendente por aqui.<br>
+          Quando um cliente preencher o formulário de avaliação, ele vai aparecer aqui para você aprovar.
+        </div>`;
+      return;
+    }
+
+    statusMsg.textContent = "";
+    pendingContainer.innerHTML = items.map((item, idx) => {
+      const rating = Math.min(5, Math.max(1, parseInt(item.nota, 10) || 5));
+      return `
+        <div class="card" data-idx="${idx}">
+          <div class="card-stars">${"★".repeat(rating)}${"☆".repeat(5 - rating)}</div>
+          <p class="card-text">"${escapeHtml(item.comentario)}"</p>
+          <div class="card-meta">${escapeHtml(item.nome || "Cliente")}${item.data ? " · " + escapeHtml(item.data) : ""}</div>
+          <div class="card-actions">
+            <button class="btn btn-approve" data-timestamp="${escapeHtml(item.timestamp)}">✓ Aprovar e publicar</button>
+          </div>
+        </div>`;
+    }).join("");
+
+    pendingContainer.querySelectorAll(".btn-approve").forEach(btn => {
+      btn.addEventListener("click", () => approveReview(btn));
+    });
+  }
+
+  async function approveReview(btn) {
+    const timestamp = btn.getAttribute("data-timestamp");
+    btn.disabled = true;
+    btn.textContent = "Aprovando…";
+
+    try {
+      const body = new URLSearchParams();
+      body.set(CONFIG.approveEntryId, timestamp);
+      await fetch(CONFIG.approveFormActionUrl, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body.toString(),
+      });
+
+      const card = btn.closest(".card");
+      card.classList.add("done");
+      card.querySelector(".card-actions").innerHTML =
+        `<span class="card-approved-tag">✓ Aprovado — já está no seu link</span>`;
+    } catch (err) {
+      btn.disabled = false;
+      btn.textContent = "✓ Aprovar e publicar";
+      alert("Não foi possível aprovar agora. Verifique sua internet e tente de novo.");
+    }
+  }
+
+  async function loadPending() {
+    statusMsg.textContent = "Carregando comentários…";
+    pendingContainer.innerHTML = "";
+
+    try {
+      const [allRows, approvedRows] = await Promise.all([
+        fetchCsvRows(CONFIG.allReviewsCsvUrl),
+        fetchCsvRows(CONFIG.approvedCsvUrl).catch(() => []),
+      ]);
+
+      if (allRows.length <= 1) {
+        renderPending([]);
+        return;
+      }
+
+      const header = allRows[0].map(h => h.trim().toLowerCase());
+      const idxTimestamp = header.indexOf("timestamp");
+      const idxNome = header.indexOf("seu nome");
+      const idxNota = header.findIndex(h => h.startsWith("nota"));
+      const idxComentario = header.indexOf("comentário");
+
+      const approvedTimestamps = new Set(
+        approvedRows.slice(1).map(r => (r[1] || "").trim()).filter(Boolean)
+      );
+
+      const all = allRows.slice(1).map(cols => ({
+        timestamp: (cols[idxTimestamp] || "").trim(),
+        nome: (cols[idxNome] || "").trim(),
+        nota: (cols[idxNota] || "").trim(),
+        comentario: (cols[idxComentario] || "").trim(),
+        data: (cols[idxTimestamp] || "").trim(),
+      })).filter(r => r.timestamp && r.comentario);
+
+      const pending = all.filter(r => !approvedTimestamps.has(r.timestamp)).reverse();
+      renderPending(pending);
+    } catch (err) {
+      statusMsg.textContent = "Não foi possível carregar os comentários agora. Toque em \"Atualizar lista\" para tentar de novo.";
+      pendingContainer.innerHTML = "";
+      console.warn(err);
+    }
+  }
+
+  refreshBtn.addEventListener("click", loadPending);
+  loadPending();
+</script>
+
+</body>
+</html>
