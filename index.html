@@ -260,14 +260,22 @@
     region: "Amsterdam e cidades vizinhas",
     whatsapp: "31684661615", // formato: código do país + número, sem espaços, sem +
     photoUrl: "karen-foto.jpg", // troque o arquivo (mesmo nome) para atualizar a foto
+
+    // Link do formulário onde os clientes deixam a avaliação (Google Forms).
+    reviewFormUrl: "https://docs.google.com/forms/d/e/1FAIpQLScElDguULzVkPDWkFvu_qj__LUsYUMxtpNYVZK-HRXiob2qBA/viewform",
+
+    // Link da planilha (aba "Publicado") como CSV — é de onde a página busca
+    // as avaliações aprovadas automaticamente. Não precisa editar isso no dia a dia.
+    reviewsCsvUrl: "https://docs.google.com/spreadsheets/d/1_opJeaBCjehlQq77SL-L47XwVg4dgJrV9aBscMZpZ-M/gviz/tq?tqx=out:csv&sheet=Publicado",
+
     reviews: [
-      // Exemplo de como adicionar uma avaliação real no futuro:
+      // Avaliações fixas (opcional). As avaliações reais dos clientes aparecem
+      // automaticamente vindas do formulário — não precisa mexer aqui.
       // { name: "Fernanda", rating: 5, text: "A Karen é super caprichosa, recomendo demais!", date: "ago/2026" },
     ],
   };
 
   const contactMsg = `Olá ${CONFIG.name.split(" ")[0]}! Vi seu portfólio de avaliações e gostaria de saber mais sobre seus serviços de limpeza 😊`;
-  const reviewMsg = `Olá ${CONFIG.name.split(" ")[0]}! Quero deixar uma avaliação sobre o seu serviço 💛\n\n⭐ Nota (1 a 5):\n📝 Comentário:\n🙋 Meu nome:`;
 
   document.getElementById("brandTag").textContent = CONFIG.brandName;
   document.getElementById("providerName").textContent = CONFIG.name;
@@ -276,7 +284,7 @@
   document.title = `${CONFIG.name} · ${CONFIG.service} · ${CONFIG.brandName}`;
 
   document.getElementById("ctaContact").href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(contactMsg)}`;
-  document.getElementById("ctaReview").href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(reviewMsg)}`;
+  document.getElementById("ctaReview").href = CONFIG.reviewFormUrl;
 
   // Avatar: foto real se existir, senão iniciais
   const avatarEl = document.getElementById("avatar");
@@ -289,29 +297,109 @@
     avatarEl.textContent = initials;
   }
 
-  // Badge de nota média (só aparece se houver avaliações)
+  // Badge de nota média + lista de avaliações (ou estado vazio)
   const ratingBadgeEl = document.getElementById("ratingBadge");
-  if (CONFIG.reviews.length > 0) {
-    const avg = (CONFIG.reviews.reduce((s, r) => s + r.rating, 0) / CONFIG.reviews.length).toFixed(1);
-    ratingBadgeEl.innerHTML = `<div class="rating-badge">★ ${avg} · ${CONFIG.reviews.length} avaliação${CONFIG.reviews.length > 1 ? "ões" : ""}</div>`;
+  const reviewsContainer = document.getElementById("reviewsContainer");
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
   }
 
-  // Lista de avaliações ou estado vazio
-  const reviewsContainer = document.getElementById("reviewsContainer");
-  if (CONFIG.reviews.length === 0) {
-    reviewsContainer.innerHTML = `
-      <div class="empty-state">
-        <p>Ainda não há avaliações públicas por aqui.<br>Seja a primeira pessoa a avaliar o trabalho da ${CONFIG.name.split(" ")[0]}!</p>
-        <a class="btn btn-primary" href="https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(reviewMsg)}" target="_blank" rel="noopener">★ Deixar avaliação</a>
-      </div>`;
-  } else {
-    reviewsContainer.innerHTML = CONFIG.reviews.map(r => `
-      <div class="review-card">
-        <div class="review-stars">${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}</div>
-        <p class="review-text">"${r.text}"</p>
-        <div class="review-meta">${r.name} · ${r.date}</div>
-      </div>
-    `).join("");
+  function renderReviews(reviews) {
+    if (reviews.length > 0) {
+      const avg = (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1);
+      ratingBadgeEl.innerHTML = `<div class="rating-badge">★ ${avg} · ${reviews.length} avaliação${reviews.length > 1 ? "ões" : ""}</div>`;
+    } else {
+      ratingBadgeEl.innerHTML = "";
+    }
+
+    if (reviews.length === 0) {
+      reviewsContainer.innerHTML = `
+        <div class="empty-state">
+          <p>Ainda não há avaliações públicas por aqui.<br>Seja a primeira pessoa a avaliar o trabalho da ${CONFIG.name.split(" ")[0]}!</p>
+          <a class="btn btn-primary" href="${CONFIG.reviewFormUrl}" target="_blank" rel="noopener">★ Deixar avaliação</a>
+        </div>`;
+    } else {
+      reviewsContainer.innerHTML = reviews.map(r => `
+        <div class="review-card">
+          <div class="review-stars">${"★".repeat(r.rating)}${"☆".repeat(5 - r.rating)}</div>
+          <p class="review-text">"${escapeHtml(r.text)}"</p>
+          <div class="review-meta">${escapeHtml(r.name)}${r.date ? " · " + escapeHtml(r.date) : ""}</div>
+        </div>
+      `).join("");
+    }
+  }
+
+  // Primeiro pinta com o que já temos (fixo no CONFIG, geralmente vazio),
+  // depois busca as avaliações reais aprovadas pela planilha.
+  renderReviews(CONFIG.reviews);
+
+  // ------------------------------------------------------------------
+  // Avaliações reais: buscadas da planilha do Google (aba "Publicado",
+  // publicada como CSV). Cada linha aprovada por lá aparece aqui.
+  // ------------------------------------------------------------------
+  function parseCSV(text) {
+    const rows = [];
+    let row = [], field = "", inQuotes = false;
+    for (let i = 0; i < text.length; i++) {
+      const c = text[i];
+      if (inQuotes) {
+        if (c === '"') {
+          if (text[i + 1] === '"') { field += '"'; i++; }
+          else { inQuotes = false; }
+        } else {
+          field += c;
+        }
+      } else if (c === '"') {
+        inQuotes = true;
+      } else if (c === ",") {
+        row.push(field); field = "";
+      } else if (c === "\n") {
+        row.push(field); rows.push(row); row = []; field = "";
+      } else if (c === "\r") {
+        // ignora
+      } else {
+        field += c;
+      }
+    }
+    if (field.length || row.length) { row.push(field); rows.push(row); }
+    return rows.filter(r => r.some(cell => cell.trim() !== ""));
+  }
+
+  if (CONFIG.reviewsCsvUrl) {
+    fetch(CONFIG.reviewsCsvUrl, { cache: "no-store" })
+      .then(res => { if (!res.ok) throw new Error("Falha ao buscar avaliações"); return res.text(); })
+      .then(text => {
+        const rows = parseCSV(text);
+        if (rows.length <= 1) return; // só o cabeçalho (ou vazio): mantém estado atual
+
+        const header = rows[0].map(h => h.trim().toLowerCase());
+        const idxNome = header.indexOf("nome");
+        const idxNota = header.indexOf("nota");
+        const idxComentario = header.indexOf("comentario");
+        const idxData = header.indexOf("data");
+
+        const fetched = rows.slice(1).map(cols => {
+          const rating = parseInt(cols[idxNota], 10);
+          return {
+            name: (cols[idxNome] || "Cliente").trim(),
+            rating: Number.isFinite(rating) ? Math.min(5, Math.max(1, rating)) : 5,
+            text: (cols[idxComentario] || "").trim(),
+            date: (cols[idxData] || "").trim(),
+          };
+        }).filter(r => r.text !== "");
+
+        if (fetched.length > 0) {
+          renderReviews(fetched);
+        }
+      })
+      .catch(err => {
+        console.warn("Não foi possível carregar as avaliações da planilha:", err);
+      });
   }
 </script>
 

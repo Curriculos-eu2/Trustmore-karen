@@ -48,3 +48,44 @@ Não precisa reenviar o arquivo inteiro. No GitHub:
 O nome "Trustmore" já está configurado na linha `brandName: "Trustmore"` dentro
 do `CONFIG`. Se um dia quiserem trocar o nome do produto, é só editar essa
 linha — atualiza automaticamente o topo da página, o título da aba e o rodapé.
+
+## Como funcionam as avaliações reais
+
+As avaliações que aparecem na página **não** ficam mais no WhatsApp — elas
+ficam dentro do próprio link, visíveis pra qualquer cliente que abrir a
+página. O fluxo é:
+
+1. O botão **"★ Deixar avaliação"** leva o cliente até um formulário do
+   Google (nome, nota de 1 a 5 estrelas e comentário).
+2. Cada resposta cai automaticamente numa planilha do Google Sheets, na aba
+   **"Form Responses 1"**.
+3. Pra aprovar (ou não) uma avaliação, a Karen (ou você) abre a **Área da
+   Karen** — uma página privada só dela, com a lista de comentários
+   pendentes e um botão **"✓ Aprovar e publicar"** em cada um. Não precisa
+   mais abrir a planilha nem digitar nada nela.
+4. Assim que ela toca em "Aprovar", o comentário já passa a aparecer
+   automaticamente no link público da Karen (`index.html`), pra qualquer
+   cliente ver. Não precisa editar nada no GitHub quando chega uma avaliação
+   nova.
+
+**Link da Área da Karen (privado — mande só pra ela, não divulgue):**
+`https://curriculos-eu2.github.io/Trustmore-karen/admin.html`
+
+Esse link é "seguro por obscuridade": não tem senha, mas também não aparece
+em nenhum lugar público — só quem tem o link consegue abrir. Se ele vazar
+algum dia, é só avisar pra gente trocar.
+
+Link do formulário de avaliação (pra reenviar pra algum cliente manualmente,
+se quiser):
+`https://docs.google.com/forms/d/e/1FAIpQLScElDguULzVkPDWkFvu_qj__LUsYUMxtpNYVZK-HRXiob2qBA/viewform`
+
+Link da planilha (Google Sheets): peça o link pra quem criou a página — é
+uma planilha privada, só quem tem acesso vê as respostas antes de aprovar
+(útil só se precisar mexer em algo manualmente; no dia a dia não precisa).
+
+**Atenção:** a página e a Área da Karen leem a planilha diretamente (sem
+precisar de "Publicar na Web"). Pra isso funcionar, a planilha precisa ficar
+com o acesso geral em **"Qualquer pessoa com o link" → Leitor** (é assim que
+já está configurado). Se um dia essa planilha for duplicada ou movida pra
+outra conta, é só conferir esse mesmo ajuste em **Compartilhar**, no canto
+superior direito da planilha.
