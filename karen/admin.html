@@ -95,6 +95,16 @@
     background: var(--green);
     color: #fff;
   }
+  .btn-reject {
+    background: rgba(0,0,0,0.06);
+    color: var(--grey);
+    border: 1px solid var(--border);
+  }
+  .btn-reject.confirming {
+    background: #fdecea;
+    color: #c0392b;
+    border-color: #f2b8b5;
+  }
   .card.done {
     opacity: 0.55;
   }
@@ -102,6 +112,16 @@
     display: inline-block;
     background: rgba(26,156,92,0.12);
     color: var(--green);
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 999px;
+    margin-bottom: 10px;
+  }
+  .card-rejected-tag {
+    display: inline-block;
+    background: rgba(107,114,128,0.12);
+    color: var(--grey);
     font-size: 12.5px;
     font-weight: 700;
     padding: 4px 10px;
@@ -276,7 +296,7 @@
 <div class="page">
   <div class="brand-tag">Trustmore</div>
   <h1>Área da Karen</h1>
-  <p class="subtitle">Aqui aparecem os comentários que os clientes deixaram.<br>Toque em <strong>Aprovar</strong> para publicar no seu link.</p>
+  <p class="subtitle">Aqui aparecem os comentários que os clientes deixaram.<br>Toque em <strong>Aprovar</strong> para publicar no seu link, ou em <strong>Descartar</strong> para não publicar.</p>
 
   <div class="profile-box">
     <div class="profile-box-title">👤 Meu perfil</div>
@@ -605,12 +625,16 @@
           <div class="card-meta">${escapeHtml(item.nome || "Cliente")}${item.data ? " · " + escapeHtml(item.data) : ""}</div>
           <div class="card-actions">
             <button class="btn btn-approve" data-timestamp="${escapeHtml(item.timestamp)}">✓ Aprovar e publicar</button>
+            <button class="btn btn-reject" data-timestamp="${escapeHtml(item.timestamp)}">🗑 Descartar</button>
           </div>
         </div>`;
     }).join("");
 
     pendingContainer.querySelectorAll(".btn-approve").forEach(btn => {
       btn.addEventListener("click", () => approveReview(btn));
+    });
+    pendingContainer.querySelectorAll(".btn-reject").forEach(btn => {
+      btn.addEventListener("click", () => rejectReview(btn));
     });
   }
 
@@ -640,6 +664,52 @@
     }
   }
 
+  async function rejectReview(btn) {
+    if (!btn.dataset.confirming) {
+      btn.dataset.confirming = "1";
+      btn.classList.add("confirming");
+      const original = btn.textContent;
+      btn.textContent = "Toque de novo pra confirmar";
+      setTimeout(() => {
+        if (btn.dataset.confirming) {
+          delete btn.dataset.confirming;
+          btn.classList.remove("confirming");
+          btn.textContent = original;
+        }
+      }, 3000);
+      return;
+    }
+
+    delete btn.dataset.confirming;
+    const timestamp = btn.getAttribute("data-timestamp");
+    const card = btn.closest(".card");
+    const approveBtn = card.querySelector(".btn-approve");
+    if (approveBtn) approveBtn.disabled = true;
+    btn.disabled = true;
+    btn.textContent = "Descartando…";
+
+    try {
+      const body = new URLSearchParams();
+      body.set(CONFIG.approveEntryId, "REJEITADO:" + timestamp);
+      await fetch(CONFIG.approveFormActionUrl, {
+        method: "POST",
+        mode: "no-cors",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: body.toString(),
+      });
+
+      card.classList.add("done");
+      card.querySelector(".card-actions").innerHTML =
+        `<span class="card-rejected-tag">🗑 Descartado — não será publicado</span>`;
+    } catch (err) {
+      if (approveBtn) approveBtn.disabled = false;
+      btn.disabled = false;
+      btn.classList.remove("confirming");
+      btn.textContent = "🗑 Descartar";
+      alert("Não foi possível descartar agora. Verifique sua internet e tente de novo.");
+    }
+  }
+
   async function loadPending() {
     statusMsg.textContent = "Carregando comentários…";
     pendingContainer.innerHTML = "";
@@ -661,9 +731,13 @@
       const idxNota = header.findIndex(h => h.startsWith("nota"));
       const idxComentario = header.indexOf("comentário");
 
-      // Aprovacoes: coluna A = Timestamp da aprovação, coluna B = "ID da avaliação" (timestamp original)
-      const approvedTimestamps = new Set(
-        approvedRows.slice(1).map(r => (r[1] || "").trim()).filter(Boolean)
+      // Aprovacoes: coluna A = Timestamp da aprovação, coluna B = "ID da avaliação"
+      // (timestamp original, ou "REJEITADO:<timestamp original>" pra descarte)
+      const processedTimestamps = new Set(
+        approvedRows.slice(1)
+          .map(r => (r[1] || "").trim())
+          .filter(Boolean)
+          .map(v => v.startsWith("REJEITADO:") ? v.slice("REJEITADO:".length) : v)
       );
 
       const all = allRows.slice(1).map(cols => ({
@@ -674,7 +748,7 @@
         data: (cols[idxTimestamp] || "").trim(),
       })).filter(r => r.timestamp && r.comentario);
 
-      const pending = all.filter(r => !approvedTimestamps.has(r.timestamp)).reverse();
+      const pending = all.filter(r => !processedTimestamps.has(r.timestamp)).reverse();
       renderPending(pending);
     } catch (err) {
       statusMsg.textContent = "Não foi possível carregar os comentários agora. Toque em \"Atualizar lista\" para tentar de novo.";
