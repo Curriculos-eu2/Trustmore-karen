@@ -411,7 +411,12 @@
     // Links prontos, mostrados na seção "Meus links"
     reviewFormUrl: "https://docs.google.com/forms/d/e/{{REVIEW_FORM_ID}}/viewform",
     profileUrl: "https://trustmore.app/{{SLUG}}/",
-    adminUrl: "https://trustmore.app/{{SLUG}}/admin.html",
+    // {{ADMIN_CODE}}: código único gerado por cliente (8 caracteres alfanuméricos
+    // aleatórios), pra ninguém conseguir chegar na área de outro cliente só
+    // adivinhando a URL. O ARQUIVO em si também deve se chamar
+    // "admin-{{ADMIN_CODE}}.html" (renomear ao copiar o template) — não deixar
+    // como "admin.html". Ver o checklist de onboarding.
+    adminUrl: "https://trustmore.app/{{SLUG}}/admin-{{ADMIN_CODE}}.html",
   };
 
   function parseCSV(text) {
