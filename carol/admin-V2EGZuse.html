@@ -455,6 +455,52 @@
       .replace(/"/g, "&quot;");
   }
 
+  // ------------------------------------------------------------------
+  // Envio para o Google Forms via formulário real (não fetch()).
+  // O Google Forms cria a linha mas ignora o valor do campo quando o
+  // envio chega via fetch()/XHR — só aceita o valor quando vem de uma
+  // submissão de <form> de verdade. Por isso montamos um <form> oculto,
+  // com destino num <iframe> invisível, e chamamos .submit() nele —
+  // isso é uma navegação real do navegador, então o Google aceita.
+  // ------------------------------------------------------------------
+  const hiddenTargetIframe = document.createElement("iframe");
+  hiddenTargetIframe.name = "trustmoreHiddenTarget";
+  hiddenTargetIframe.style.display = "none";
+  document.body.appendChild(hiddenTargetIframe);
+
+  function submitViaHiddenForm(actionUrl, fields) {
+    return new Promise((resolve) => {
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = actionUrl;
+      form.target = "trustmoreHiddenTarget";
+      form.style.display = "none";
+
+      Object.keys(fields).forEach((name) => {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = name;
+        input.value = fields[name];
+        form.appendChild(input);
+      });
+
+      document.body.appendChild(form);
+
+      let settled = false;
+      const finish = () => {
+        if (settled) return;
+        settled = true;
+        hiddenTargetIframe.removeEventListener("load", finish);
+        form.remove();
+        resolve();
+      };
+      hiddenTargetIframe.addEventListener("load", finish);
+      setTimeout(finish, 4000); // rede à parte, sempre resolve
+
+      form.submit();
+    });
+  }
+
   const LINKS = {
     linkReview: CONFIG.reviewFormUrl,
     linkProfile: CONFIG.profileUrl,
@@ -562,19 +608,13 @@
     profileSaveStatus.className = "profile-save-status";
 
     try {
-      const body = new URLSearchParams();
-      body.set(CONFIG.profileEntryIds.nome, fNome.value.trim());
-      body.set(CONFIG.profileEntryIds.servico, fServico.value.trim());
-      body.set(CONFIG.profileEntryIds.cidade, fCidade.value.trim());
-      body.set(CONFIG.profileEntryIds.whatsapp, fWhatsapp.value.trim());
-      body.set(CONFIG.profileEntryIds.idiomas, fIdiomas.value.trim());
-      body.set(CONFIG.profileEntryIds.bio, fBio.value.trim());
-
-      await fetch(CONFIG.profileFormActionUrl, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: body.toString(),
+      await submitViaHiddenForm(CONFIG.profileFormActionUrl, {
+        [CONFIG.profileEntryIds.nome]: fNome.value.trim(),
+        [CONFIG.profileEntryIds.servico]: fServico.value.trim(),
+        [CONFIG.profileEntryIds.cidade]: fCidade.value.trim(),
+        [CONFIG.profileEntryIds.whatsapp]: fWhatsapp.value.trim(),
+        [CONFIG.profileEntryIds.idiomas]: fIdiomas.value.trim(),
+        [CONFIG.profileEntryIds.bio]: fBio.value.trim(),
       });
 
       profileSaveStatus.textContent = "✓ Perfil atualizado! Já vai aparecer no seu link público.";
@@ -641,13 +681,8 @@
     btn.textContent = "Aprovando…";
 
     try {
-      const body = new URLSearchParams();
-      body.set(CONFIG.approveEntryId, timestamp);
-      await fetch(CONFIG.approveFormActionUrl, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: body.toString(),
+      await submitViaHiddenForm(CONFIG.approveFormActionUrl, {
+        [CONFIG.approveEntryId]: timestamp,
       });
 
       const card = btn.closest(".card");
@@ -686,13 +721,8 @@
     btn.textContent = "Descartando…";
 
     try {
-      const body = new URLSearchParams();
-      body.set(CONFIG.approveEntryId, "REJEITADO:" + timestamp);
-      await fetch(CONFIG.approveFormActionUrl, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: body.toString(),
+      await submitViaHiddenForm(CONFIG.approveFormActionUrl, {
+        [CONFIG.approveEntryId]: "REJEITADO:" + timestamp,
       });
 
       card.classList.add("done");
