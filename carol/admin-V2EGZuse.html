@@ -396,17 +396,12 @@
     // CSV com o histórico de edições de perfil (aba "Perfil")
     profileCsvUrl: "https://docs.google.com/spreadsheets/d/15ekGRSVQKXWRjn0KttcZ_5a3Ws3M-p26I0ibOQFDGmA/gviz/tq?tqx=out:csv&sheet=Perfil",
 
-    // Formulário "Perfil — Trustmore" — cada envio vira uma nova linha na aba
-    // "Perfil"; a página pública sempre usa a linha mais recente.
-    profileFormActionUrl: "https://docs.google.com/forms/d/e/1FAIpQLSc2o1R1ZiCD7oFz_dcvvPhKiZmbGnhtvqaf__HIn4mlTh1xzA/formResponse",
-    profileEntryIds: {
-      servico: "entry.405754563",
-      cidade: "entry.2090334290",
-      whatsapp: "entry.1733091729",
-      bio: "entry.1565682153",
-      idiomas: "entry.128678852",
-      nome: "entry.1043523472",
-    },
+    // Webhook (Google Apps Script) que grava direto na planilha — substitui
+    // os formulários do Google Forms pra Aprovar/Descartar/Salvar perfil,
+    // porque o Forms ignora o valor do campo quando o envio não vem de uma
+    // submissão real da própria página do formulário (bug confirmado).
+    webhookUrl: "https://script.google.com/macros/s/AKfycbygl_YktFOSvu6r9AfM_VGFkVP1gnQJDBzDjbOYIP4RSkkVwHWodaS-u3ZHEe8YyKTfeA/exec",
+    sheetId: "15ekGRSVQKXWRjn0KttcZ_5a3Ws3M-p26I0ibOQFDGmA",
 
     // Links prontos, mostrados na seção "Meus links"
     reviewFormUrl: "https://docs.google.com/forms/d/e/1FAIpQLSebGwqUj4O_-w5p8p-imytFYnTEkgFSsboeHWg2AAVuDWhbDQ/viewform",
@@ -456,49 +451,25 @@
   }
 
   // ------------------------------------------------------------------
-  // Envio para o Google Forms via formulário real (não fetch()).
-  // O Google Forms cria a linha mas ignora o valor do campo quando o
-  // envio chega via fetch()/XHR — só aceita o valor quando vem de uma
-  // submissão de <form> de verdade. Por isso montamos um <form> oculto,
-  // com destino num <iframe> invisível, e chamamos .submit() nele —
-  // isso é uma navegação real do navegador, então o Google aceita.
+  // Envio pro webhook (Google Apps Script) — grava direto na planilha via
+  // SpreadsheetApp, contornando o bug do Google Forms (que ignora o valor
+  // do campo quando o envio não vem da própria página do formulário).
   // ------------------------------------------------------------------
-  const hiddenTargetIframe = document.createElement("iframe");
-  hiddenTargetIframe.name = "trustmoreHiddenTarget";
-  hiddenTargetIframe.style.display = "none";
-  document.body.appendChild(hiddenTargetIframe);
-
-  function submitViaHiddenForm(actionUrl, fields) {
-    return new Promise((resolve) => {
-      const form = document.createElement("form");
-      form.method = "POST";
-      form.action = actionUrl;
-      form.target = "trustmoreHiddenTarget";
-      form.style.display = "none";
-
-      Object.keys(fields).forEach((name) => {
-        const input = document.createElement("input");
-        input.type = "hidden";
-        input.name = name;
-        input.value = fields[name];
-        form.appendChild(input);
-      });
-
-      document.body.appendChild(form);
-
-      let settled = false;
-      const finish = () => {
-        if (settled) return;
-        settled = true;
-        hiddenTargetIframe.removeEventListener("load", finish);
-        form.remove();
-        resolve();
-      };
-      hiddenTargetIframe.addEventListener("load", finish);
-      setTimeout(finish, 4000); // rede à parte, sempre resolve
-
-      form.submit();
+  async function postToWebhook(action, fields) {
+    const body = new URLSearchParams({
+      sheetId: CONFIG.sheetId,
+      action: action,
+      ...fields,
     });
+    const res = await fetch(CONFIG.webhookUrl, {
+      method: "POST",
+      body: body,
+    });
+    const text = await res.text();
+    if (text.trim() !== "ok") {
+      throw new Error("Webhook retornou erro: " + text);
+    }
+    return text;
   }
 
   const LINKS = {
@@ -608,13 +579,13 @@
     profileSaveStatus.className = "profile-save-status";
 
     try {
-      await submitViaHiddenForm(CONFIG.profileFormActionUrl, {
-        [CONFIG.profileEntryIds.nome]: fNome.value.trim(),
-        [CONFIG.profileEntryIds.servico]: fServico.value.trim(),
-        [CONFIG.profileEntryIds.cidade]: fCidade.value.trim(),
-        [CONFIG.profileEntryIds.whatsapp]: fWhatsapp.value.trim(),
-        [CONFIG.profileEntryIds.idiomas]: fIdiomas.value.trim(),
-        [CONFIG.profileEntryIds.bio]: fBio.value.trim(),
+      await postToWebhook("profile", {
+        nome: fNome.value.trim(),
+        servico: fServico.value.trim(),
+        cidade: fCidade.value.trim(),
+        whatsapp: fWhatsapp.value.trim(),
+        idiomas: fIdiomas.value.trim(),
+        bio: fBio.value.trim(),
       });
 
       profileSaveStatus.textContent = "✓ Perfil atualizado! Já vai aparecer no seu link público.";
@@ -681,9 +652,7 @@
     btn.textContent = "Aprovando…";
 
     try {
-      await submitViaHiddenForm(CONFIG.approveFormActionUrl, {
-        [CONFIG.approveEntryId]: timestamp,
-      });
+      await postToWebhook("approve", { value: timestamp });
 
       const card = btn.closest(".card");
       card.classList.add("done");
@@ -721,9 +690,7 @@
     btn.textContent = "Descartando…";
 
     try {
-      await submitViaHiddenForm(CONFIG.approveFormActionUrl, {
-        [CONFIG.approveEntryId]: "REJEITADO:" + timestamp,
-      });
+      await postToWebhook("approve", { value: "REJEITADO:" + timestamp });
 
       card.classList.add("done");
       card.querySelector(".card-actions").innerHTML =
