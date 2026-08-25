@@ -389,24 +389,15 @@
     // CSV com os IDs (timestamps) já aprovados (aba "Aprovacoes")
     approvedCsvUrl: "https://docs.google.com/spreadsheets/d/{{SHEET_ID}}/gviz/tq?tqx=out:csv&sheet=Aprovacoes",
 
-    // Formulário "Aprovações" — enviar o Timestamp aqui marca a avaliação como aprovada
-    approveFormActionUrl: "https://docs.google.com/forms/d/e/{{APROVACAO_FORM_ID}}/formResponse",
-    approveEntryId: "{{APROVACAO_ENTRY_ID}}",
-
     // CSV com o histórico de edições de perfil (aba "Perfil")
     profileCsvUrl: "https://docs.google.com/spreadsheets/d/{{SHEET_ID}}/gviz/tq?tqx=out:csv&sheet=Perfil",
 
-    // Formulário "Perfil — Trustmore" — cada envio vira uma nova linha na aba
-    // "Perfil"; a página pública sempre usa a linha mais recente.
-    profileFormActionUrl: "https://docs.google.com/forms/d/e/{{PERFIL_FORM_ID}}/formResponse",
-    profileEntryIds: {
-      servico: "{{PERFIL_ENTRY_SERVICO}}",
-      cidade: "{{PERFIL_ENTRY_CIDADE}}",
-      whatsapp: "{{PERFIL_ENTRY_WHATSAPP}}",
-      bio: "{{PERFIL_ENTRY_BIO}}",
-      idiomas: "{{PERFIL_ENTRY_IDIOMAS}}",
-      nome: "{{PERFIL_ENTRY_NOME}}",
-    },
+    // Webhook (Google Apps Script) que grava direto na planilha — substitui
+    // os formulários do Google Forms pra Aprovar/Descartar/Salvar perfil,
+    // porque o Forms ignora o valor do campo quando o envio não vem de uma
+    // submissão real da própria página do formulário (bug confirmado).
+    webhookUrl: "https://script.google.com/macros/s/AKfycbygl_YktFOSvu6r9AfM_VGFkVP1gnQJDBzDjbOYIP4RSkkVwHWodaS-u3ZHEe8YyKTfeA/exec",
+    sheetId: "{{SHEET_ID}}",
 
     // Links prontos, mostrados na seção "Meus links"
     reviewFormUrl: "https://docs.google.com/forms/d/e/{{REVIEW_FORM_ID}}/viewform",
@@ -453,6 +444,28 @@
       .replace(/</g, "&lt;")
       .replace(/>/g, "&gt;")
       .replace(/"/g, "&quot;");
+  }
+
+  // ------------------------------------------------------------------
+  // Envio pro webhook (Google Apps Script) — grava direto na planilha via
+  // SpreadsheetApp, contornando o bug do Google Forms (que ignora o valor
+  // do campo quando o envio não vem da própria página do formulário).
+  // ------------------------------------------------------------------
+  async function postToWebhook(action, fields) {
+    const body = new URLSearchParams({
+      sheetId: CONFIG.sheetId,
+      action: action,
+      ...fields,
+    });
+    const res = await fetch(CONFIG.webhookUrl, {
+      method: "POST",
+      body: body,
+    });
+    const text = await res.text();
+    if (text.trim() !== "ok") {
+      throw new Error("Webhook retornou erro: " + text);
+    }
+    return text;
   }
 
   const LINKS = {
@@ -562,19 +575,13 @@
     profileSaveStatus.className = "profile-save-status";
 
     try {
-      const body = new URLSearchParams();
-      body.set(CONFIG.profileEntryIds.nome, fNome.value.trim());
-      body.set(CONFIG.profileEntryIds.servico, fServico.value.trim());
-      body.set(CONFIG.profileEntryIds.cidade, fCidade.value.trim());
-      body.set(CONFIG.profileEntryIds.whatsapp, fWhatsapp.value.trim());
-      body.set(CONFIG.profileEntryIds.idiomas, fIdiomas.value.trim());
-      body.set(CONFIG.profileEntryIds.bio, fBio.value.trim());
-
-      await fetch(CONFIG.profileFormActionUrl, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: body.toString(),
+      await postToWebhook("profile", {
+        nome: fNome.value.trim(),
+        servico: fServico.value.trim(),
+        cidade: fCidade.value.trim(),
+        whatsapp: fWhatsapp.value.trim(),
+        idiomas: fIdiomas.value.trim(),
+        bio: fBio.value.trim(),
       });
 
       profileSaveStatus.textContent = "✓ Perfil atualizado! Já vai aparecer no seu link público.";
@@ -641,14 +648,7 @@
     btn.textContent = "Aprovando…";
 
     try {
-      const body = new URLSearchParams();
-      body.set(CONFIG.approveEntryId, timestamp);
-      await fetch(CONFIG.approveFormActionUrl, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: body.toString(),
-      });
+      await postToWebhook("approve", { value: timestamp });
 
       const card = btn.closest(".card");
       card.classList.add("done");
@@ -686,14 +686,7 @@
     btn.textContent = "Descartando…";
 
     try {
-      const body = new URLSearchParams();
-      body.set(CONFIG.approveEntryId, "REJEITADO:" + timestamp);
-      await fetch(CONFIG.approveFormActionUrl, {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: body.toString(),
-      });
+      await postToWebhook("approve", { value: "REJEITADO:" + timestamp });
 
       card.classList.add("done");
       card.querySelector(".card-actions").innerHTML =
